@@ -3,7 +3,9 @@ module.exports = {
   content: ['./src/**/*.{html,ts}'],
   theme: {
     extend: {
-
+      colors: {
+        navy: '#111827'
+      }
     },
     fontFamily: {
       sans: ['"Source Sans 3"', 'sans-serif'],

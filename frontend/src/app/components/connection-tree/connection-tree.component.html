@@ -1,0 +1,6 @@
+<p-tree
+  class="block h-full w-full [&>div]:h-full [&_.p-treenode-label>span]:text-nowrap [&_.p-treenode-label]:overflow-hidden [&_.p-treenode-label]:text-ellipsis"
+  [value]="connectionTree"
+  selectionMode="single"
+  (onNodeSelect)="onNodeSelect($event)"
+></p-tree>

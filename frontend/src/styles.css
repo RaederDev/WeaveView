@@ -1,6 +1,16 @@
-@tailwind base;
+@layer tailwind-base, primeng;
+
+@import "tailwindcss/base" layer(tailwind-base);
 @tailwind components;
 @tailwind utilities;
+
+@import "primeng/resources/themes/lara-dark-blue/theme.css";
+@import "primeng/resources/primeng.css";
+@import "primeicons/primeicons.css";
+
+html {
+  @apply text-sm;
+}
 
 /* source-sans-3-regular - latin */
 @font-face {

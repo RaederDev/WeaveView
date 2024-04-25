@@ -1,1 +1,8 @@
-<div>test</div>
+<p-splitter class="block h-screen [&>div]:h-full" [panelSizes]="[30, 70]">
+  <ng-template pTemplate>
+    <app-connection-tree class="block w-full"></app-connection-tree>
+  </ng-template>
+  <ng-template pTemplate>
+    <div class="bg-gray-700 flex-grow">test</div>
+  </ng-template>
+</p-splitter>
