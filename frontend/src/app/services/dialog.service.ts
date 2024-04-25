@@ -1,13 +1,12 @@
 import { Injectable } from '@angular/core';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class DialogService {
+  public constructor() {}
 
-  constructor() { }
-
-  open(): void {
+  public open(): void {
     go.main.App.ShowDialog();
   }
 }

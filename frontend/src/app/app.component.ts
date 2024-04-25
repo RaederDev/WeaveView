@@ -5,18 +5,17 @@ import { TranslateService } from '@ngx-translate/core';
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
-  styleUrls: ['./app.component.scss']
 })
 export class AppComponent implements OnInit {
+  public constructor(private translate: TranslateService) {}
 
-  constructor(private translate: TranslateService) { }
-
-  ngOnInit(): void {
-    this.translate.addLangs(["en", "de"]);
+  public ngOnInit(): void {
+    this.translate.addLangs(['en', 'de']);
     this.translate.setDefaultLang(this.translate.langs[0]);
   }
 
-  updateLanguage(event: any): void {
-    this.translate.use(event.target.value);
+  public updateLanguage(event: Event): void {
+    const elem = event.target as HTMLSelectElement;
+    this.translate.use(elem.value);
   }
 }
