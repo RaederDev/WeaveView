@@ -1,0 +1,14 @@
+<p-dialog
+  header="Add new connection"
+  [(visible)]="visible"
+  [modal]="true"
+  [draggable]="false"
+  [resizable]="false"
+  [closable]="true"
+  class="[&_.p-dialog]:max-w-[600px] [&_.p-dialog]:w-full [&_.p-dialog]:mx-5"
+>
+  <app-edit-connection-form
+    [values]="values()"
+    (connectionEdited)="onConnectionAdded($event)"
+  ></app-edit-connection-form>
+</p-dialog>

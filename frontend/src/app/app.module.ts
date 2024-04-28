@@ -13,12 +13,28 @@ import { ButtonModule } from 'primeng/button';
 import { TreeModule } from 'primeng/tree';
 import { ConnectionTreeComponent } from './components/connection-tree/connection-tree.component';
 import { SplitterModule } from 'primeng/splitter';
+import { ToolbarModule } from 'primeng/toolbar';
+import { InputTextModule } from 'primeng/inputtext';
+import { CreateConnectionComponent } from './components/create-connection-modal/create-connection.component';
+import { EditConnectionFormComponent } from './components/edit-connection-form/edit-connection-form.component';
+import { DialogModule } from 'primeng/dialog';
+import { ReactiveFormsModule } from '@angular/forms';
+import { InputNumberModule } from 'primeng/inputnumber';
+import { DropdownModule } from 'primeng/dropdown';
+import { FormErrorsComponent } from './components/form-errors/form-errors.component';
 
 const httpLoaderFactory = (http: HttpClient): TranslateHttpLoader =>
   new TranslateHttpLoader(http, './assets/i18n/', '.json');
 
 @NgModule({
-  declarations: [AppComponent, HomeComponent, ConnectionTreeComponent],
+  declarations: [
+    AppComponent,
+    HomeComponent,
+    ConnectionTreeComponent,
+    CreateConnectionComponent,
+    EditConnectionFormComponent,
+    FormErrorsComponent,
+  ],
   imports: [
     BrowserModule,
     BrowserAnimationsModule,
@@ -34,6 +50,12 @@ const httpLoaderFactory = (http: HttpClient): TranslateHttpLoader =>
     ButtonModule,
     TreeModule,
     SplitterModule,
+    ToolbarModule,
+    InputTextModule,
+    DialogModule,
+    ReactiveFormsModule,
+    InputNumberModule,
+    DropdownModule,
   ],
   providers: [],
   bootstrap: [AppComponent],

@@ -1,0 +1,46 @@
+<form [formGroup]="form" (ngSubmit)="onSubmit()">
+  <div class="flex flex-col gap-2 max-w-80">
+    <label for="scheme">Scheme <span class="text-red-500">*</span></label>
+    <p-dropdown
+      formControlName="scheme"
+      [options]="schemes"
+      optionValue="value"
+      optionLabel="label"
+      placeholder="Select a Scheme"
+      inputId="scheme"
+    ></p-dropdown>
+  </div>
+  <div class="flex flex-col gap-2 max-w-80 w-full pt-9">
+    <label for="host">Host <span class="text-red-500">*</span></label>
+    <input
+      pInputText
+      id="host"
+      aria-describedby="host-help"
+      formControlName="host"
+      placeholder="localhost"
+      autocorrect="off"
+      autocomplete="off"
+    />
+    @if (showErrors()) {
+      <app-form-errors [control]="form.get('host')"></app-form-errors>
+    }
+    <small id="host-help">Hostname or IP of your server</small>
+  </div>
+  <div class="flex flex-col gap-2 max-w-80 w-full pt-9">
+    <label for="http-port">HTTP Port <span class="text-red-500">*</span></label>
+    <p-inputNumber
+      inputId="http-port"
+      formControlName="httpPort"
+      class="block w-full [&_span]:block [&_input]:w-full [&_input]:block"
+      [format]="false"
+      [maxlength]="5"
+    ></p-inputNumber>
+    @if (showErrors()) {
+      <app-form-errors [control]="form.get('httpPort')"></app-form-errors>
+    }
+  </div>
+  <div class="flex flex-row gap-10 pt-7">
+    <p-button label="Test connection" class="mt-4" type="submit"></p-button>
+    <p-button label="Save" class="mt-4" type="submit"></p-button>
+  </div>
+</form>

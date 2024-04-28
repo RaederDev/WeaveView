@@ -1,0 +1,5 @@
+@if (control()?.errors) {
+  @for (error of getErrors(); track $index) {
+    <small class="text-red-500">{{ error }}</small>
+  }
+}

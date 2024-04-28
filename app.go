@@ -3,42 +3,64 @@ package main
 import (
 	"context"
 	"fmt"
+	"wbrowser/lib/weaviate"
 
 	"github.com/wailsapp/wails/v2/pkg/runtime"
 )
 
-// App struct
 type App struct {
-	ctx context.Context
+	ctx                 context.Context
+	weaviateConnections []*weaviate.WeaviateConnection
+	connection_count    int
 }
 
-// NewApp creates a new App application struct
 func NewApp() *App {
-	return &App{}
+	return &App{
+		weaviateConnections: make([]*weaviate.WeaviateConnection, 0, 5),
+		connection_count:    0,
+	}
 }
 
-// startup is called at application startup
 func (b *App) startup(ctx context.Context) {
-	// Perform your setup here
+	fmt.Println("Starting up!")
 	b.ctx = ctx
 }
 
-// domReady is called after the front-end dom has been loaded
 func (b *App) domReady(ctx context.Context) {
-	// Add your action here
+	fmt.Println("DOM is ready!")
 }
 
-// shutdown is called at application termination
 func (b *App) shutdown(ctx context.Context) {
-	// Perform your teardown here
+	fmt.Println("Shutting down!")
 }
 
-// Greet returns a greeting for the given name
+func (b *App) ConnectToWeaviate(host string, scheme string, httpPort int) (int, error) {
+	fmt.Printf("Connecting to Weaviate at %s://%s:%d\n", scheme, host, httpPort)
+	config := &weaviate.WeaviateConnectionConfig{
+		Host:     host,
+		Scheme:   scheme,
+		HttpPort: httpPort,
+	}
+	connection, err := weaviate.NewWeaviateConnection(config)
+	if err != nil {
+		return 0, err
+	}
+	b.weaviateConnections = append(b.weaviateConnections, connection)
+	b.connection_count += 1
+	return b.connection_count, nil
+}
+
+func (b *App) HealthCheck(connectionId int) (bool, error) {
+	if connectionId < 1 || connectionId > b.connection_count {
+		return false, fmt.Errorf("Invalid connection ID: %d", connectionId)
+	}
+	return b.weaviateConnections[connectionId-1].HealthCheck()
+}
+
 func (b *App) Greet(name string) string {
 	return fmt.Sprintf("Hello %s, It's show time!", name)
 }
 
-// Shows a Dialog
 func (b *App) ShowDialog() {
 	_, err := runtime.MessageDialog(b.ctx, runtime.MessageDialogOptions{
 		Type:    runtime.InfoDialog,
