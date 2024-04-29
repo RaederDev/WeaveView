@@ -1,67 +1,108 @@
-import { Component } from '@angular/core';
-import { TreeNode } from 'primeng/api';
+import { Component, computed, inject, signal } from '@angular/core';
+import { MenuItem, TreeNode } from 'primeng/api';
 import { ConnectionTreeItem } from '../../models/tree.types';
-import { TreeNodeSelectEvent } from 'primeng/tree';
+import { ConnectionManagerService } from '../../services/connection-manager.service';
+import { toSignal } from '@angular/core/rxjs-interop';
+import {
+  InitialisedWeaviateConnection,
+  WeaviateConnectionConfig,
+} from '../../types/connection.type';
+import { TreeNodeContextMenuSelectEvent } from 'primeng/tree';
 
 @Component({
   selector: 'app-connection-tree',
   templateUrl: './connection-tree.component.html',
 })
 export class ConnectionTreeComponent {
-  public connectionTree: Array<TreeNode<ConnectionTreeItem>> = [
-    {
-      label: '[ ✔︎ ] - Localhost',
-      icon: 'pi pi-database',
-      selectable: false,
-      children: [
-        {
-          label: 'Collections',
-          icon: 'pi pi-table',
-          selectable: false,
-          children: [
-            {
-              label: 'users',
-              icon: 'pi pi-file',
-            },
-            {
-              label: 'sites',
-              icon: 'pi pi-file',
-            },
-          ],
-        },
-        {
-          label: 'Settings',
-          icon: 'pi pi-cog',
-        },
-      ],
-    },
-    {
-      label: 'Very long connection name test',
-      icon: 'pi pi-database',
-      selectable: false,
-      children: [
-        {
-          label: 'Collections',
-          icon: 'pi pi-table',
-          selectable: false,
-          children: [
-            {
-              label: 'Collections',
-            },
-            {
-              label: 'Grandchild 2',
-            },
-          ],
-        },
-        {
-          label: 'Settings',
-          icon: 'pi pi-cog',
-        },
-      ],
-    },
-  ];
+  private connectionManagerService = inject(ConnectionManagerService);
+  public connections = toSignal<Array<WeaviateConnectionConfig | InitialisedWeaviateConnection>>(
+    this.connectionManagerService.connections,
+    { requireSync: true },
+  );
+  public connectionTree = computed<Array<TreeNode<ConnectionTreeItem>>>(() => {
+    const sorted = this.connections().sort((a, b) => a.sortOrder - b.sortOrder);
+    return this.buildConnectionTree(sorted);
+  });
+  public menuItems = signal<Array<MenuItem>>([]);
+  public connecting = signal<boolean>(false);
 
-  public onNodeSelect($event: TreeNodeSelectEvent) {
-    console.log($event);
+  public buildConnectionTree(
+    connections: Array<WeaviateConnectionConfig | InitialisedWeaviateConnection>,
+  ) {
+    return connections.map(connection => {
+      const treeItem: TreeNode<ConnectionTreeItem> = {
+        label: connection.label,
+        icon: 'pi pi-database',
+        selectable: false,
+        data: {
+          collections: [],
+          id: connection.id,
+          connectionId: undefined,
+          connection: connection,
+        },
+        children: [],
+      };
+      if ((connection as InitialisedWeaviateConnection).status === 'connected') {
+        const initConnection = connection as InitialisedWeaviateConnection;
+        treeItem.data!.connectionId = initConnection.connectionId;
+        treeItem.children = [
+          {
+            label: 'Collections',
+            icon: 'pi pi-table',
+            selectable: false,
+            children: initConnection.collections.map(collection => ({
+              label: collection.CollectionName,
+              icon: 'pi pi-file',
+            })),
+          },
+        ];
+      }
+      return treeItem;
+    });
+  }
+
+  public onMenuSelect($event: TreeNodeContextMenuSelectEvent) {
+    const node: TreeNode<ConnectionTreeItem> = $event.node;
+    if (!node.data) {
+      return;
+    }
+    if (this.connecting()) {
+      this.menuItems.set([
+        {
+          label: 'Currently connecting...',
+          icon: 'pi pi-spin pi-spinner',
+        },
+      ]);
+    } else if (node.data.connectionId === undefined) {
+      this.menuItems.set([
+        {
+          label: 'Connect',
+          icon: 'pi pi-plus',
+          command: () => this.connect(node.data!),
+        },
+      ]);
+    } else {
+      this.menuItems.set([
+        {
+          label: 'Disconnect',
+          icon: 'pi pi-minus',
+          command: () => {
+            console.log('Disconnect');
+          },
+        },
+      ]);
+    }
+  }
+
+  private async connect(item: ConnectionTreeItem) {
+    this.connecting.set(true);
+    try {
+      await this.connectionManagerService.connect(item!.connection);
+    } catch (error) {
+      console.error('Error while connecting to Weaviate');
+      console.error(error);
+    } finally {
+      this.connecting.set(false);
+    }
   }
 }

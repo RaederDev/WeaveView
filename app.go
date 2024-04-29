@@ -52,9 +52,16 @@ func (b *App) ConnectToWeaviate(host string, scheme string, httpPort int) (int, 
 
 func (b *App) HealthCheck(connectionId int) (bool, error) {
 	if connectionId < 1 || connectionId > b.connection_count {
-		return false, fmt.Errorf("Invalid connection ID: %d", connectionId)
+		return false, fmt.Errorf("invalid connection ID: %d", connectionId)
 	}
 	return b.weaviateConnections[connectionId-1].HealthCheck()
+}
+
+func (b *App) ListCollections(connectionId int) ([]weaviate.WeviateCollectionInfo, error) {
+	if connectionId < 1 || connectionId > b.connection_count {
+		return nil, fmt.Errorf("invalid connection ID: %d", connectionId)
+	}
+	return b.weaviateConnections[connectionId-1].ListCollections()
 }
 
 func (b *App) Greet(name string) string {

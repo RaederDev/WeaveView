@@ -1,5 +1,6 @@
-import { Component, model, signal } from '@angular/core';
+import { Component, inject, model, signal } from '@angular/core';
 import { EditConnectionValue } from '../../types/create-connection.types';
+import { ConnectionManagerService } from '../../services/connection-manager.service';
 
 @Component({
   selector: 'app-create-connection',
@@ -9,15 +10,14 @@ export class CreateConnectionComponent {
   public visible = model<boolean>(false);
   public values = signal<EditConnectionValue>({
     scheme: 'http',
-    host: null,
-    httpPort: null,
+    host: '',
+    httpPort: 8080,
+    label: '',
   });
+  private connectionManagerService = inject(ConnectionManagerService);
 
   public onConnectionAdded(createConnection: EditConnectionValue) {
-    console.log('create->', createConnection);
-  }
-
-  public hide() {
+    this.connectionManagerService.addNewConnection(createConnection);
     this.visible.set(false);
   }
 }

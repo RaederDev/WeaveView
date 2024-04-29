@@ -22,6 +22,8 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { InputNumberModule } from 'primeng/inputnumber';
 import { DropdownModule } from 'primeng/dropdown';
 import { FormErrorsComponent } from './components/form-errors/form-errors.component';
+import { ContextMenuModule } from 'primeng/contextmenu';
+import { ToastModule } from 'primeng/toast';
 
 const httpLoaderFactory = (http: HttpClient): TranslateHttpLoader =>
   new TranslateHttpLoader(http, './assets/i18n/', '.json');
@@ -56,6 +58,7 @@ const httpLoaderFactory = (http: HttpClient): TranslateHttpLoader =>
     ReactiveFormsModule,
     InputNumberModule,
     DropdownModule,
+    ContextMenuModule,
   ],
   providers: [],
   bootstrap: [AppComponent],

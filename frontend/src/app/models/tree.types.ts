@@ -1,15 +1,8 @@
-export type ConnectionTreeItem = CollectionItem | SettingsItem;
+import { InitialisedWeaviateConnection, WeaviateConnectionConfig } from '../types/connection.type';
 
-interface BaseItem {
-  connectionId: number;
-  type: 'collection' | 'settings';
-}
-
-export interface CollectionItem extends BaseItem {
-  type: 'collection';
+export interface ConnectionTreeItem {
   id: number;
-}
-
-export interface SettingsItem extends BaseItem {
-  type: 'settings';
+  connectionId: number | undefined;
+  collections: Array<string>;
+  connection: WeaviateConnectionConfig | InitialisedWeaviateConnection;
 }

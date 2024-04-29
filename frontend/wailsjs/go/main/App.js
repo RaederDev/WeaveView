@@ -14,6 +14,10 @@ export function HealthCheck(arg1) {
   return window['go']['main']['App']['HealthCheck'](arg1);
 }
 
+export function ListCollections(arg1) {
+  return window['go']['main']['App']['ListCollections'](arg1);
+}
+
 export function ShowDialog() {
   return window['go']['main']['App']['ShowDialog']();
 }

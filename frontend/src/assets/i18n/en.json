@@ -1,14 +1,5 @@
 {
-    "NAV": {
-        "HOME": "Home",
-        "ABOUT": "About (Greet)"
-    },
-    "HOME": {
-        "PAGE_FROM": "This  fromage ",
-        "OPEN_DIALOG": "Open Dialog"
-    },
-    "ABOUT": {
-        "PAGE_FROM": "This  from ",
-        "TYPE_INTO_BOX_NOTICE": "Type into the box and receive a Greet!"
-    }
+  "sidebar": {
+    "search": "Search"
+  }
 }

@@ -1,7 +1,8 @@
 export type ConnectionScheme = 'http' | 'https';
 
 export interface EditConnectionValue {
+  label: string;
   scheme: ConnectionScheme;
-  host: string | null;
-  httpPort: number | null;
+  host: string;
+  httpPort: number;
 }

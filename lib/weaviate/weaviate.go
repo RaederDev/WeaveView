@@ -5,6 +5,7 @@ import (
 	"strconv"
 
 	"github.com/weaviate/weaviate-go-client/v4/weaviate"
+	"github.com/weaviate/weaviate/entities/models"
 )
 
 type WeaviateConnectionConfig struct {
@@ -15,6 +16,11 @@ type WeaviateConnectionConfig struct {
 
 type WeaviateConnection struct {
 	client *weaviate.Client
+}
+
+type WeviateCollectionInfo struct {
+	CollectionName string
+	Properties     []*models.Property
 }
 
 func NewWeaviateConnection(config *WeaviateConnectionConfig) (*WeaviateConnection, error) {
@@ -30,15 +36,19 @@ func (w *WeaviateConnection) HealthCheck() (bool, error) {
 	return w.client.Misc().LiveChecker().Do(context.Background())
 }
 
-func (w *WeaviateConnection) ListCollections() ([]string, error) {
+func (w *WeaviateConnection) ListCollections() ([]WeviateCollectionInfo, error) {
 	schema, err := w.client.Schema().Getter().Do(context.Background())
 	if err != nil {
 		return nil, err
 	}
-	collections := make([]string, 0, 10)
+	collections := make([]WeviateCollectionInfo, 0, 10)
 	classes := schema.Classes
 	for idx := range classes {
-		collections = append(collections, classes[idx].Class)
+		info := WeviateCollectionInfo{
+			CollectionName: classes[idx].Class,
+			Properties:     classes[idx].Properties,
+		}
+		collections = append(collections, info)
 	}
 	return collections, nil
 }

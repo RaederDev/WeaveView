@@ -1,15 +1,18 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 
 import { TranslateService } from '@ngx-translate/core';
+import { ConnectionManagerService } from './services/connection-manager.service';
 
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
 })
 export class AppComponent implements OnInit {
-  public constructor(private translate: TranslateService) {}
+  private connectionManagerService = inject(ConnectionManagerService);
+  private translate = inject(TranslateService);
 
   public ngOnInit(): void {
+    this.connectionManagerService.loadConnections();
     this.translate.addLangs(['en', 'de']);
     this.translate.setDefaultLang(this.translate.langs[0]);
   }

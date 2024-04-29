@@ -18,6 +18,9 @@ export class EditConnectionFormComponent {
     { value: 'https', label: 'HTTPS' },
   ];
   public form = new FormGroup({
+    label: new FormControl<string | null>(null, {
+      validators: [Validators.required],
+    }),
     host: new FormControl<string | null>(null, {
       validators: [Validators.required],
     }),
@@ -47,8 +50,9 @@ export class EditConnectionFormComponent {
     }
     this.connectionEdited.emit({
       scheme: this.form.value.scheme as ConnectionScheme,
-      host: this.form.value.host as string | null,
-      httpPort: this.form.value.httpPort as number | null,
+      host: this.form.value.host as string,
+      httpPort: this.form.value.httpPort as number,
+      label: this.form.value.label as string,
     });
   }
 }
