@@ -23,7 +23,8 @@ import { InputNumberModule } from 'primeng/inputnumber';
 import { DropdownModule } from 'primeng/dropdown';
 import { FormErrorsComponent } from './components/form-errors/form-errors.component';
 import { ContextMenuModule } from 'primeng/contextmenu';
-import { ToastModule } from 'primeng/toast';
+import { ConnectionViewComponent } from './components/collection-view/connection-view.component';
+import { TableModule } from 'primeng/table';
 
 const httpLoaderFactory = (http: HttpClient): TranslateHttpLoader =>
   new TranslateHttpLoader(http, './assets/i18n/', '.json');
@@ -36,6 +37,7 @@ const httpLoaderFactory = (http: HttpClient): TranslateHttpLoader =>
     CreateConnectionComponent,
     EditConnectionFormComponent,
     FormErrorsComponent,
+    ConnectionViewComponent,
   ],
   imports: [
     BrowserModule,
@@ -59,6 +61,7 @@ const httpLoaderFactory = (http: HttpClient): TranslateHttpLoader =>
     InputNumberModule,
     DropdownModule,
     ContextMenuModule,
+    TableModule,
   ],
   providers: [],
   bootstrap: [AppComponent],
