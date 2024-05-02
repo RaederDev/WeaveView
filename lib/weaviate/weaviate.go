@@ -18,7 +18,7 @@ type WeaviateConnection struct {
 	client *weaviate.Client
 }
 
-type WeviateCollectionInfo struct {
+type WeaviateCollectionInfo struct {
 	CollectionName string
 	Properties     []*models.Property
 }
@@ -36,15 +36,15 @@ func (w *WeaviateConnection) HealthCheck() (bool, error) {
 	return w.client.Misc().LiveChecker().Do(context.Background())
 }
 
-func (w *WeaviateConnection) ListCollections() ([]WeviateCollectionInfo, error) {
+func (w *WeaviateConnection) ListCollections() ([]WeaviateCollectionInfo, error) {
 	schema, err := w.client.Schema().Getter().Do(context.Background())
 	if err != nil {
 		return nil, err
 	}
-	collections := make([]WeviateCollectionInfo, 0, 10)
+	collections := make([]WeaviateCollectionInfo, 0, 10)
 	classes := schema.Classes
 	for idx := range classes {
-		info := WeviateCollectionInfo{
+		info := WeaviateCollectionInfo{
 			CollectionName: classes[idx].Class,
 			Properties:     classes[idx].Properties,
 		}

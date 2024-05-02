@@ -1,4 +1,5 @@
-import { Component, signal } from '@angular/core';
+import { Component, model, signal } from '@angular/core';
+import { SelectedCollection } from '../../components/connection-tree/connection-tree.component';
 
 @Component({
   selector: 'app-home',
@@ -6,15 +7,5 @@ import { Component, signal } from '@angular/core';
 })
 export class HomeComponent {
   public createConnectionVisible = signal<boolean>(false);
-
-  public async connect() {
-    try {
-      const res: number = await go.main.App.ConnectToWeaviate('localhost', 'http', 8081);
-      console.log('Connected to Weaviate');
-      console.log(res);
-    } catch (error) {
-      console.error('Error while connecting to Weaviate');
-      console.error(error);
-    }
-  }
+  public selectedCollection = model<SelectedCollection | null>(null);
 }

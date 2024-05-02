@@ -57,7 +57,7 @@ func (b *App) HealthCheck(connectionId int) (bool, error) {
 	return b.weaviateConnections[connectionId-1].HealthCheck()
 }
 
-func (b *App) ListCollections(connectionId int) ([]weaviate.WeviateCollectionInfo, error) {
+func (b *App) ListCollections(connectionId int) ([]weaviate.WeaviateCollectionInfo, error) {
 	if connectionId < 1 || connectionId > b.connection_count {
 		return nil, fmt.Errorf("invalid connection ID: %d", connectionId)
 	}

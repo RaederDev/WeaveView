@@ -1,4 +1,4 @@
-import { Component, computed, inject, signal } from '@angular/core';
+import { Component, computed, inject, output, signal } from '@angular/core';
 import { MenuItem, TreeNode } from 'primeng/api';
 import { ConnectionTreeItem } from '../../models/tree.types';
 import { ConnectionManagerService } from '../../services/connection-manager.service';
@@ -8,6 +8,11 @@ import {
   WeaviateConnectionConfig,
 } from '../../types/connection.type';
 import { TreeNodeContextMenuSelectEvent } from 'primeng/tree';
+
+export interface SelectedCollection {
+  connection: InitialisedWeaviateConnection;
+  collection: string;
+}
 
 @Component({
   selector: 'app-connection-tree',
@@ -25,6 +30,7 @@ export class ConnectionTreeComponent {
   });
   public menuItems = signal<Array<MenuItem>>([]);
   public connecting = signal<boolean>(false);
+  public onCollectionSelected = output<SelectedCollection>();
 
   public buildConnectionTree(
     connections: Array<WeaviateConnectionConfig | InitialisedWeaviateConnection>,

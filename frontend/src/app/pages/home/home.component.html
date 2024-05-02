@@ -15,12 +15,18 @@
           (click)="createConnectionVisible.set(true)"
         ></button>
       </div>
-      <app-connection-tree class="block w-full flex-grow"></app-connection-tree>
+      <app-connection-tree
+        class="block w-full flex-grow"
+        (onCollectionSelected)="selectedCollection.set($event)"
+      ></app-connection-tree>
     </div>
   </ng-template>
   <ng-template pTemplate>
     <div class="flex-grow bg-gray-700">
-      <app-connection-view class="block w-full h-full"></app-connection-view>
+      <app-connection-view
+        [selectedCollection]="selectedCollection()"
+        class="block w-full h-full"
+      ></app-connection-view>
     </div>
   </ng-template>
 </p-splitter>

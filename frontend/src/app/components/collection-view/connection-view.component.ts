@@ -1,10 +1,12 @@
-import { Component } from '@angular/core';
+import { Component, input } from '@angular/core';
+import { SelectedCollection } from '../connection-tree/connection-tree.component';
 
 @Component({
   selector: 'app-connection-view',
   templateUrl: './connection-view.component.html',
 })
 export class ConnectionViewComponent {
+  public selectedCollection = input.required<SelectedCollection | null>();
   public tableContent = [
     {
       name: 'Table 1',
