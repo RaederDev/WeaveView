@@ -79,4 +79,38 @@ export class ConnectionManagerService {
     console.log('collections', collections);
     return [res, collections];
   }
+
+  public async getCollectionItems(
+    connection: WeaviateConnectionConfig,
+    collectionName: string,
+    classProperties: Array<string>,
+    batchSize: number,
+    cursor: string,
+  ): Promise<Array<Record<string, unknown>>> {
+    const data = await go.main.App.GetCollectionItems(
+      connection.id,
+      collectionName,
+      classProperties,
+      batchSize,
+      cursor,
+    );
+    const getData = data?.data?.Get;
+    if (!getData || !getData[collectionName]) {
+      return [];
+    }
+    return getData[collectionName];
+  }
+
+  public async getCollectionCount(
+    connection: WeaviateConnectionConfig,
+    collectionName: string,
+  ): Promise<number> {
+    const data = await go.main.App.GetCollectionItemCount(connection.id, collectionName);
+    const aggregateData = data?.data?.Aggregate;
+    if (!aggregateData || !aggregateData[collectionName]) {
+      return 0;
+    }
+
+    return aggregateData[collectionName].at(0)?.meta?.count || 0;
+  }
 }

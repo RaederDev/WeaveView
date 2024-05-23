@@ -19,7 +19,7 @@ func main() {
 
 	// Create application with options
 	err := wails.Run(&options.App{
-		Title:  "wbrowser",
+		Title:  "WeaveView",
 		Width:  720,
 		Height: 570,
 		// MinWidth:          720,

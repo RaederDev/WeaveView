@@ -6,6 +6,14 @@ export function ConnectToWeaviate(arg1, arg2, arg3) {
   return window['go']['main']['App']['ConnectToWeaviate'](arg1, arg2, arg3);
 }
 
+export function GetCollectionItemCount(arg1, arg2) {
+  return window['go']['main']['App']['GetCollectionItemCount'](arg1, arg2);
+}
+
+export function GetCollectionItems(arg1, arg2, arg3, arg4, arg5) {
+  return window['go']['main']['App']['GetCollectionItems'](arg1, arg2, arg3, arg4, arg5);
+}
+
 export function Greet(arg1) {
   return window['go']['main']['App']['Greet'](arg1);
 }

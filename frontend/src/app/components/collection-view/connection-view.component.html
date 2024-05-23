@@ -1,5 +1,5 @@
 <p-table
-  [value]="tableContent"
+  [value]="tableContent()"
   [paginator]="true"
   [rows]="5"
   [showCurrentPageReport]="true"
@@ -11,14 +11,16 @@
 >
   <ng-template pTemplate="header">
     <tr>
-      <th class="w-1/2">Name <p-sortIcon field="name"></p-sortIcon></th>
-      <th class="w-1/2">Country <p-sortIcon field="country"></p-sortIcon></th>
+      @for (header of headers(); track header.name) {
+        <th>{{ header.label }} <p-sortIcon [field]="header.name"></p-sortIcon></th>
+      }
     </tr>
   </ng-template>
   <ng-template pTemplate="body" let-row>
     <tr>
-      <td>{{ row.name }}</td>
-      <td>{{ row.country }}</td>
+      @for (header of headers(); track header.name) {
+        <td>{{ row[header.name] }}</td>
+      }
     </tr>
   </ng-template>
   <ng-template pTemplate="paginatorleft">

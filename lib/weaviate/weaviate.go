@@ -5,6 +5,7 @@ import (
 	"strconv"
 
 	"github.com/weaviate/weaviate-go-client/v4/weaviate"
+	"github.com/weaviate/weaviate-go-client/v4/weaviate/graphql"
 	"github.com/weaviate/weaviate/entities/models"
 )
 
@@ -34,6 +35,39 @@ func NewWeaviateConnection(config *WeaviateConnectionConfig) (*WeaviateConnectio
 
 func (w *WeaviateConnection) HealthCheck() (bool, error) {
 	return w.client.Misc().LiveChecker().Do(context.Background())
+}
+
+func (w *WeaviateConnection) GetCollectionItemCount(collectionName string) (*models.GraphQLResponse, error) {
+	client := w.client
+	meta := graphql.Field{
+		Name: "meta", Fields: []graphql.Field{
+			{Name: "count"},
+		},
+	}
+
+	return client.GraphQL().Aggregate().
+		WithClassName(collectionName).
+		WithFields(meta).
+		Do(context.Background())
+}
+
+func (w *WeaviateConnection) GetCollectionItems(collectionName string, classProperties []string, batchSize int, cursor string) (*models.GraphQLResponse, error) {
+	client := w.client
+	fields := []graphql.Field{}
+	for _, prop := range classProperties {
+		fields = append(fields, graphql.Field{Name: prop})
+	}
+	fields = append(fields, graphql.Field{Name: "_additional { id vector }"})
+
+	get := client.GraphQL().Get().
+		WithClassName(collectionName).
+		WithFields(fields...).
+		WithLimit(batchSize)
+
+	if cursor != "" {
+		return get.WithAfter(cursor).Do(context.Background())
+	}
+	return get.Do(context.Background())
 }
 
 func (w *WeaviateConnection) ListCollections() ([]WeaviateCollectionInfo, error) {

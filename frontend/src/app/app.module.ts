@@ -25,6 +25,8 @@ import { FormErrorsComponent } from './components/form-errors/form-errors.compon
 import { ContextMenuModule } from 'primeng/contextmenu';
 import { ConnectionViewComponent } from './components/collection-view/connection-view.component';
 import { TableModule } from 'primeng/table';
+import { ToastModule } from 'primeng/toast';
+import { MessageService } from 'primeng/api';
 
 const httpLoaderFactory = (http: HttpClient): TranslateHttpLoader =>
   new TranslateHttpLoader(http, './assets/i18n/', '.json');
@@ -62,8 +64,9 @@ const httpLoaderFactory = (http: HttpClient): TranslateHttpLoader =>
     DropdownModule,
     ContextMenuModule,
     TableModule,
+    ToastModule,
   ],
-  providers: [],
+  providers: [MessageService],
   bootstrap: [AppComponent],
 })
 export class AppModule {}

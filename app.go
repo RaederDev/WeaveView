@@ -6,6 +6,7 @@ import (
 	"wbrowser/lib/weaviate"
 
 	"github.com/wailsapp/wails/v2/pkg/runtime"
+	"github.com/weaviate/weaviate/entities/models"
 )
 
 type App struct {
@@ -62,6 +63,20 @@ func (b *App) ListCollections(connectionId int) ([]weaviate.WeaviateCollectionIn
 		return nil, fmt.Errorf("invalid connection ID: %d", connectionId)
 	}
 	return b.weaviateConnections[connectionId-1].ListCollections()
+}
+
+func (b *App) GetCollectionItems(connectionId int, collectionName string, classProperties []string, batchSize int, cursor string) (*models.GraphQLResponse, error) {
+	if connectionId < 1 || connectionId > b.connection_count {
+		return nil, fmt.Errorf("invalid connection ID: %d", connectionId)
+	}
+	return b.weaviateConnections[connectionId-1].GetCollectionItems(collectionName, classProperties, batchSize, cursor)
+}
+
+func (b *App) GetCollectionItemCount(connectionId int, collectionName string) (*models.GraphQLResponse, error) {
+	if connectionId < 1 || connectionId > b.connection_count {
+		return nil, fmt.Errorf("invalid connection ID: %d", connectionId)
+	}
+	return b.weaviateConnections[connectionId-1].GetCollectionItemCount(collectionName)
 }
 
 func (b *App) Greet(name string) string {

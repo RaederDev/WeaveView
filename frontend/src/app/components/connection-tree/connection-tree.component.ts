@@ -1,5 +1,5 @@
 import { Component, computed, inject, output, signal } from '@angular/core';
-import { MenuItem, TreeNode } from 'primeng/api';
+import { MenuItem, MessageService, TreeNode } from 'primeng/api';
 import { ConnectionTreeItem } from '../../models/tree.types';
 import { ConnectionManagerService } from '../../services/connection-manager.service';
 import { toSignal } from '@angular/core/rxjs-interop';
@@ -7,11 +7,13 @@ import {
   InitialisedWeaviateConnection,
   WeaviateConnectionConfig,
 } from '../../types/connection.type';
-import { TreeNodeContextMenuSelectEvent } from 'primeng/tree';
+import { TreeNodeContextMenuSelectEvent, TreeNodeSelectEvent } from 'primeng/tree';
+import { Property } from '../../types/weaviate.types';
 
 export interface SelectedCollection {
   connection: InitialisedWeaviateConnection;
   collection: string;
+  properties: Array<Property>;
 }
 
 @Component({
@@ -20,6 +22,7 @@ export interface SelectedCollection {
 })
 export class ConnectionTreeComponent {
   private connectionManagerService = inject(ConnectionManagerService);
+  private messageService = inject(MessageService);
   public connections = toSignal<Array<WeaviateConnectionConfig | InitialisedWeaviateConnection>>(
     this.connectionManagerService.connections,
     { requireSync: true },
@@ -45,6 +48,7 @@ export class ConnectionTreeComponent {
           id: connection.id,
           connectionId: undefined,
           connection: connection,
+          properties: [],
         },
         children: [],
       };
@@ -59,6 +63,14 @@ export class ConnectionTreeComponent {
             children: initConnection.collections.map(collection => ({
               label: collection.CollectionName,
               icon: 'pi pi-file',
+              data: {
+                id: connection.id,
+                connectionId: initConnection.connectionId,
+                collectionName: collection.CollectionName,
+                properties: collection.Properties,
+                collections: [],
+                connection: connection,
+              },
             })),
           },
         ];
@@ -100,12 +112,23 @@ export class ConnectionTreeComponent {
     }
   }
 
+  public onNodeSelect(treeNode: TreeNodeSelectEvent) {
+    this.onCollectionSelected.emit({
+      connection: treeNode.node.data!.connection,
+      collection: treeNode.node.data!.collectionName,
+      properties: treeNode.node.data!.properties,
+    });
+  }
+
   private async connect(item: ConnectionTreeItem) {
     this.connecting.set(true);
     try {
       await this.connectionManagerService.connect(item!.connection);
     } catch (error) {
-      console.error('Error while connecting to Weaviate');
+      this.messageService.add({
+        severity: 'error',
+        summary: 'Error while connecting to Weaviate',
+      });
       console.error(error);
     } finally {
       this.connecting.set(false);

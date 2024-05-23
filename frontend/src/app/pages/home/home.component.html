@@ -22,11 +22,13 @@
     </div>
   </ng-template>
   <ng-template pTemplate>
-    <div class="flex-grow bg-gray-700">
-      <app-connection-view
-        [selectedCollection]="selectedCollection()"
-        class="block w-full h-full"
-      ></app-connection-view>
+    <div class="flex-grow bg-gray-700 max-w-full overflow-scroll">
+      @if (selectedCollection()) {
+        <app-connection-view
+          [selectedCollection]="selectedCollection()"
+          class="block w-full h-full"
+        ></app-connection-view>
+      }
     </div>
   </ng-template>
 </p-splitter>
