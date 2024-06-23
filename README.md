@@ -7,6 +7,9 @@ Alpha version weaviate server browser. Please see sections below for instruction
 - Add HTTP based connections
 - Browse collections
 
+![add connection](screenshots/add_connection.png)
+![collections](screenshots/collections.png)
+
 ## Building the application
 
 ### Prerequisites
