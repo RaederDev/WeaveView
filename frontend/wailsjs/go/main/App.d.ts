@@ -7,12 +7,10 @@ export function ConnectToWeaviate(arg1:string,arg2:string,arg3:number):Promise<n
 
 export function GetCollectionItemCount(arg1:number,arg2:string):Promise<models.GraphQLResponse>;
 
-export function GetCollectionItems(arg1:number,arg2:string,arg3:Array<string>,arg4:number,arg5:string):Promise<models.GraphQLResponse>;
-
-export function Greet(arg1:string):Promise<string>;
+export function GetCollectionItems(arg1:number,arg2:string,arg3:Array<string>,arg4:number,arg5:number):Promise<models.GraphQLResponse>;
 
 export function HealthCheck(arg1:number):Promise<boolean>;
 
 export function ListCollections(arg1:number):Promise<Array<weaviate.WeaviateCollectionInfo>>;
 
-export function ShowDialog():Promise<void>;
+export function TestConnection(arg1:string,arg2:string,arg3:number):Promise<boolean>;

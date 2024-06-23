@@ -6,5 +6,6 @@
   [contextMenu]="contextMenu"
   (onNodeContextMenuSelect)="onMenuSelect($event)"
   (onNodeSelect)="onNodeSelect($event)"
+  emptyMessage="No connections found"
 ></p-tree>
 <p-contextMenu #contextMenu [model]="menuItems()"></p-contextMenu>

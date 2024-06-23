@@ -1,6 +1,8 @@
-import { Component, effect, input, output, signal } from '@angular/core';
+import { Component, effect, inject, input, output, signal } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { ConnectionScheme, EditConnectionValue } from '../../types/create-connection.types';
+import { ConnectionManagerService } from '../../services/connection-manager.service';
+import { MessageService } from 'primeng/api';
 
 @Component({
   selector: 'app-edit-connection-form',
@@ -29,6 +31,8 @@ export class EditConnectionFormComponent {
       validators: [Validators.required],
     }),
   });
+  private connectionManagerService = inject(ConnectionManagerService);
+  private messageService = inject(MessageService);
 
   public constructor() {
     effect(
@@ -41,18 +45,42 @@ export class EditConnectionFormComponent {
     );
   }
 
-  public testConnection() {}
+  public async testConnection() {
+    if (this.form.invalid) {
+      this.showErrors.set(true);
+      return;
+    }
+    const testConnection = await this.connectionManagerService.testConnection(
+      this.getEditConnectionValue(),
+    );
+
+    if (!testConnection) {
+      this.messageService.add({
+        severity: 'error',
+        summary: 'Error while connecting to Weaviate',
+      });
+      return;
+    }
+    this.messageService.add({
+      severity: 'success',
+      summary: 'Connection successful',
+    });
+  }
 
   public onSubmit() {
     if (this.form.invalid) {
       this.showErrors.set(true);
       return;
     }
-    this.connectionEdited.emit({
+    this.connectionEdited.emit(this.getEditConnectionValue());
+  }
+
+  private getEditConnectionValue(): EditConnectionValue {
+    return {
       scheme: this.form.value.scheme as ConnectionScheme,
       host: this.form.value.host as string,
       httpPort: this.form.value.httpPort as number,
       label: this.form.value.label as string,
-    });
+    };
   }
 }

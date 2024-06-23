@@ -14,10 +14,6 @@ export function GetCollectionItems(arg1, arg2, arg3, arg4, arg5) {
   return window['go']['main']['App']['GetCollectionItems'](arg1, arg2, arg3, arg4, arg5);
 }
 
-export function Greet(arg1) {
-  return window['go']['main']['App']['Greet'](arg1);
-}
-
 export function HealthCheck(arg1) {
   return window['go']['main']['App']['HealthCheck'](arg1);
 }
@@ -26,6 +22,6 @@ export function ListCollections(arg1) {
   return window['go']['main']['App']['ListCollections'](arg1);
 }
 
-export function ShowDialog() {
-  return window['go']['main']['App']['ShowDialog']();
+export function TestConnection(arg1, arg2, arg3) {
+  return window['go']['main']['App']['TestConnection'](arg1, arg2, arg3);
 }

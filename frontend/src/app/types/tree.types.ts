@@ -1,5 +1,5 @@
-import { InitialisedWeaviateConnection, WeaviateConnectionConfig } from '../types/connection.type';
-import { Property } from '../types/weaviate.types';
+import { InitialisedWeaviateConnection, WeaviateConnectionConfig } from './connection.types';
+import { Property } from './weaviate.types';
 
 export interface ConnectionTreeItem {
   id: number;

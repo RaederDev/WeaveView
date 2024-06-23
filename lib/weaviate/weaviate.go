@@ -51,7 +51,7 @@ func (w *WeaviateConnection) GetCollectionItemCount(collectionName string) (*mod
 		Do(context.Background())
 }
 
-func (w *WeaviateConnection) GetCollectionItems(collectionName string, classProperties []string, batchSize int, cursor string) (*models.GraphQLResponse, error) {
+func (w *WeaviateConnection) GetCollectionItems(collectionName string, classProperties []string, batchSize int, offset int) (*models.GraphQLResponse, error) {
 	client := w.client
 	fields := []graphql.Field{}
 	for _, prop := range classProperties {
@@ -64,8 +64,8 @@ func (w *WeaviateConnection) GetCollectionItems(collectionName string, classProp
 		WithFields(fields...).
 		WithLimit(batchSize)
 
-	if cursor != "" {
-		return get.WithAfter(cursor).Do(context.Background())
+	if offset != -1 {
+		return get.WithOffset(offset).Do(context.Background())
 	}
 	return get.Do(context.Background())
 }

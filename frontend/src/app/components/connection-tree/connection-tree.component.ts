@@ -1,12 +1,12 @@
 import { Component, computed, inject, output, signal } from '@angular/core';
 import { MenuItem, MessageService, TreeNode } from 'primeng/api';
-import { ConnectionTreeItem } from '../../models/tree.types';
+import { ConnectionTreeItem } from '../../types/tree.types';
 import { ConnectionManagerService } from '../../services/connection-manager.service';
 import { toSignal } from '@angular/core/rxjs-interop';
 import {
   InitialisedWeaviateConnection,
   WeaviateConnectionConfig,
-} from '../../types/connection.type';
+} from '../../types/connection.types';
 import { TreeNodeContextMenuSelectEvent, TreeNodeSelectEvent } from 'primeng/tree';
 import { Property } from '../../types/weaviate.types';
 

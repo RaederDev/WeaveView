@@ -1,4 +1,4 @@
-module wbrowser
+module weaveview
 
 go 1.21
 

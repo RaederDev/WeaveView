@@ -1,5 +1,5 @@
 import { inject, Injectable } from '@angular/core';
-import { InitialisedWeaviateConnection, WeaviateConnectionConfig } from '../types/connection.type';
+import { InitialisedWeaviateConnection, WeaviateConnectionConfig } from '../types/connection.types';
 import { EditConnectionValue } from '../types/create-connection.types';
 import { StorageService } from './storage.service';
 import { StorageKey } from '../enums/storage-key.enum';
@@ -65,34 +65,19 @@ export class ConnectionManagerService {
     this.connections.next([...existingConnections]);
   }
 
-  private async connectToWeaviate(
-    connection: WeaviateConnectionConfig,
-  ): Promise<[number, Array<Collection>]> {
-    const res: number = await go.main.App.ConnectToWeaviate(
-      connection.host,
-      connection.scheme,
-      connection.httpPort,
-    );
-    const connectSuccess = await go.main.App.HealthCheck(res);
-    const collections = await go.main.App.ListCollections(res);
-    console.log('connectSuccess', connectSuccess);
-    console.log('collections', collections);
-    return [res, collections];
-  }
-
   public async getCollectionItems(
     connection: WeaviateConnectionConfig,
     collectionName: string,
     classProperties: Array<string>,
     batchSize: number,
-    cursor: string,
+    offset: number,
   ): Promise<Array<Record<string, unknown>>> {
     const data = await go.main.App.GetCollectionItems(
       connection.id,
       collectionName,
       classProperties,
       batchSize,
-      cursor,
+      offset,
     );
     const getData = data?.data?.Get;
     if (!getData || !getData[collectionName]) {
@@ -112,5 +97,28 @@ export class ConnectionManagerService {
     }
 
     return aggregateData[collectionName].at(0)?.meta?.count || 0;
+  }
+
+  public async testConnection(connection: EditConnectionValue): Promise<boolean> {
+    return await go.main.App.TestConnection(
+      connection.host,
+      connection.scheme,
+      connection.httpPort,
+    );
+  }
+
+  private async connectToWeaviate(
+    connection: WeaviateConnectionConfig,
+  ): Promise<[number, Array<Collection>]> {
+    const res: number = await go.main.App.ConnectToWeaviate(
+      connection.host,
+      connection.scheme,
+      connection.httpPort,
+    );
+    const connectSuccess = await go.main.App.HealthCheck(res);
+    const collections = await go.main.App.ListCollections(res);
+    console.log('connectSuccess', connectSuccess);
+    console.log('collections', collections);
+    return [res, collections];
   }
 }

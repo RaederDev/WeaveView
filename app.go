@@ -3,9 +3,8 @@ package main
 import (
 	"context"
 	"fmt"
-	"wbrowser/lib/weaviate"
+	"weaveview/lib/weaviate"
 
-	"github.com/wailsapp/wails/v2/pkg/runtime"
 	"github.com/weaviate/weaviate/entities/models"
 )
 
@@ -51,6 +50,20 @@ func (b *App) ConnectToWeaviate(host string, scheme string, httpPort int) (int, 
 	return b.connection_count, nil
 }
 
+func (b *App) TestConnection(host string, scheme string, httpPort int) bool {
+	config := &weaviate.WeaviateConnectionConfig{
+		Host:     host,
+		Scheme:   scheme,
+		HttpPort: httpPort,
+	}
+	connection, err := weaviate.NewWeaviateConnection(config)
+	if err != nil {
+		return false
+	}
+	health, err := connection.HealthCheck()
+	return err == nil && health
+}
+
 func (b *App) HealthCheck(connectionId int) (bool, error) {
 	if connectionId < 1 || connectionId > b.connection_count {
 		return false, fmt.Errorf("invalid connection ID: %d", connectionId)
@@ -65,11 +78,11 @@ func (b *App) ListCollections(connectionId int) ([]weaviate.WeaviateCollectionIn
 	return b.weaviateConnections[connectionId-1].ListCollections()
 }
 
-func (b *App) GetCollectionItems(connectionId int, collectionName string, classProperties []string, batchSize int, cursor string) (*models.GraphQLResponse, error) {
+func (b *App) GetCollectionItems(connectionId int, collectionName string, classProperties []string, batchSize int, offset int) (*models.GraphQLResponse, error) {
 	if connectionId < 1 || connectionId > b.connection_count {
 		return nil, fmt.Errorf("invalid connection ID: %d", connectionId)
 	}
-	return b.weaviateConnections[connectionId-1].GetCollectionItems(collectionName, classProperties, batchSize, cursor)
+	return b.weaviateConnections[connectionId-1].GetCollectionItems(collectionName, classProperties, batchSize, offset)
 }
 
 func (b *App) GetCollectionItemCount(connectionId int, collectionName string) (*models.GraphQLResponse, error) {
@@ -77,20 +90,4 @@ func (b *App) GetCollectionItemCount(connectionId int, collectionName string) (*
 		return nil, fmt.Errorf("invalid connection ID: %d", connectionId)
 	}
 	return b.weaviateConnections[connectionId-1].GetCollectionItemCount(collectionName)
-}
-
-func (b *App) Greet(name string) string {
-	return fmt.Sprintf("Hello %s, It's show time!", name)
-}
-
-func (b *App) ShowDialog() {
-	_, err := runtime.MessageDialog(b.ctx, runtime.MessageDialogOptions{
-		Type:    runtime.InfoDialog,
-		Title:   "Native Dialog from Go",
-		Message: "This is a Native Dialog send from Go.",
-	})
-
-	if err != nil {
-		panic(err)
-	}
 }
